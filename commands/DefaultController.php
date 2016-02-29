@@ -1,6 +1,6 @@
 <?php
 
-namespace humanized\maintainable\commands;
+namespace humanized\maintenance\commands;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
