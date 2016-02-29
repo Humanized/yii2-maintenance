@@ -11,22 +11,18 @@ use Yii;
  */
 class Controller extends SuperClass {
 
+    protected $maintenance = FALSE;
+    protected $maintenceRedirect = NULL;
+
     public function beforeAction($action)
     {
         //return parent call when maintenance is disbled or user has read permission
-        if (!Maintenance::status()) {
-            return parent::beforeAction($action);
+        if (Maintenance::status() && !\humanized\maintainable\Module::getInstance()->params->canRead) {
+            $this->maintenance = TRUE;
+            $this->redirect([\humanized\maintainable\Module::getInstance()->id . "/default/index"]);
+            
         }
-    }
-
-    public function actionMaintenanceModeOn()
-    {
-        
-    }
-
-    public function actionMaintenanceModeOff()
-    {
-        
+        return parent::beforeAction($action);
     }
 
 }

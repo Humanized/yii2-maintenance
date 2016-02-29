@@ -31,11 +31,28 @@ class Module extends \yii\base\Module {
         if (\Yii::$app instanceof \yii\console\Application) {
             $this->controllerNamespace = 'humanized\maintenance\commands';
         }
+
+        if (isset($this->canRead)) {
+            $this->params['canRead'] = $this->canRead;
+        }
+        if (isset($this->canWrite)) {
+            $this->params['canWrite'] = $this->canWrite;
+        }
+
+        if (isset($this->writePermission)) {
+            $this->params['writePermission'] = $this->writePermission;
+            $this->params['canWrite'] = \Yii::$app->user->can($this->writePermission);
+        }
+
+        if (isset($this->readPermission)) {
+            $this->params['readPermission'] = $this->readPermission;
+            $this->params['canRead'] = \Yii::$app->user->can($this->readPermission);
+        }
     }
-    
+
     public function beforeAction($action)
     {
-        
+
         return parent::beforeAction($action);
     }
 

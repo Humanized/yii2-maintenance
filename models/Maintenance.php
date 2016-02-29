@@ -62,7 +62,7 @@ class Maintenance extends \yii\db\ActiveRecord {
 
     public static function status()
     {
-        return FALSE;
+        return isset(self::current());
     }
 
     public static function enable($msg)
@@ -70,8 +70,9 @@ class Maintenance extends \yii\db\ActiveRecord {
         if (!self::status()) {
             $model = new Maintenance(['comment' => $msg]);
             $model->time_disabled = NULL;
-            $model->save();
+            return $model->save();
         }
+        return false;
     }
 
     public static function disable()
@@ -81,7 +82,17 @@ class Maintenance extends \yii\db\ActiveRecord {
             foreach ($models as $model) {
                 $model->touch('time_disabled');
             }
+            return true;
         }
+        return false;
+    }
+
+    public static function current()
+    {
+        if (self::status()) {
+            return self::findOne(['IS', 'time_disabled', NULL]);
+        }
+        return NULL;
     }
     
     
