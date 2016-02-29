@@ -13,7 +13,6 @@ class DefaultController extends \yii\console\Controller {
     public function actionIndex($cmd, $msg = NULL)
     {
         $exit = 0;
-
         switch ($cmd) {
             case 'on': {
                     $exit = $this->enable($msg);
@@ -27,9 +26,9 @@ class DefaultController extends \yii\console\Controller {
             default : {
                     $this->stderr('Usage: php yii <module-name> on|off');
                     $exit = 100;
+                    break;
                 }
         }
-
         return $exit;
     }
 
