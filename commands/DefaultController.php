@@ -22,6 +22,11 @@ class DefaultController extends \yii\console\Controller {
                     $exit = $this->disable();
                     break;
                 }
+            case 'status': {
+                    $this->stdout('Maintenance Mode ' . (\humanized\maintenance\models\Maintenance::status() ? 'Enabled' : 'Disabled'));
+                    $exit = 0;
+                    break;
+                }
 
             default : {
                     $this->stderr('Usage: php yii <module-name> on|off');
@@ -29,20 +34,24 @@ class DefaultController extends \yii\console\Controller {
                     break;
                 }
         }
+        $this->stdout("\n");
         return $exit;
     }
 
     private function enable($msg)
     {
+
         if (!isset($msg)) {
             $this->stderr('Usage: php yii <module-name> on msg');
             return 201;
         }
-        if (\humanized\maintainable\models\Maintenance::status()) {
-            $this->stderr('Maintenance Mode Already Enabled' . \humanized\maintainable\models\Maintenance::current()->comment);
+
+        if (\humanized\maintenance\models\Maintenance::status()) {
+            $this->stderr('Maintenance Mode Already Enabled');
             return 202;
         }
-        if (\humanized\maintainable\models\Maintenance::enable($msg)) {
+
+        if (\humanized\maintenance\models\Maintenance::enable($msg)) {
             $this->stdout('Maintenance Mode Enabled');
             return 0;
         }
@@ -52,11 +61,11 @@ class DefaultController extends \yii\console\Controller {
 
     private function disable()
     {
-        if (\humanized\maintainable\models\Maintenance::status()) {
+        if (!\humanized\maintenance\models\Maintenance::status()) {
             $this->stderr('Maintenance Mode Already Disabled');
             return 302;
         }
-        if (\humanized\maintainable\models\Maintenance::disable()) {
+        if (\humanized\maintenance\models\Maintenance::disable()) {
             $this->stdout('Maintenance Mode Disabled');
             return 0;
         }

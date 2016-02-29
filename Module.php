@@ -28,9 +28,6 @@ class Module extends \yii\base\Module {
     public function init()
     {
         parent::init();
-        if (\Yii::$app instanceof \yii\console\Application) {
-            $this->controllerNamespace = 'humanized\maintenance\commands';
-        }
 
         if (isset($this->canRead)) {
             $this->params['canRead'] = $this->canRead;
@@ -38,15 +35,19 @@ class Module extends \yii\base\Module {
         if (isset($this->canWrite)) {
             $this->params['canWrite'] = $this->canWrite;
         }
+        if (\Yii::$app instanceof \yii\console\Application) {
+            $this->controllerNamespace = 'humanized\maintenance\commands';
+        } else {
 
-        if (isset($this->writePermission)) {
-            $this->params['writePermission'] = $this->writePermission;
-            $this->params['canWrite'] = \Yii::$app->user->can($this->writePermission);
-        }
+            if (isset($this->writePermission)) {
+                $this->params['writePermission'] = $this->writePermission;
+                $this->params['canWrite'] = \Yii::$app->user->can($this->writePermission);
+            }
 
-        if (isset($this->readPermission)) {
-            $this->params['readPermission'] = $this->readPermission;
-            $this->params['canRead'] = \Yii::$app->user->can($this->readPermission);
+            if (isset($this->readPermission)) {
+                $this->params['readPermission'] = $this->readPermission;
+                $this->params['canRead'] = \Yii::$app->user->can($this->readPermission);
+            }
         }
     }
 

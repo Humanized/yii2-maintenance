@@ -1,9 +1,9 @@
 <?php
 
-namespace humanized\maintainable\components;
+namespace humanized\maintenance\components;
 
 use yii\web\Controller as SuperClass;
-use humanized\maintainable\models\Maintenance;
+use humanized\maintenance\models\Maintenance;
 
 /**
  * SearchController wires the various display actions.

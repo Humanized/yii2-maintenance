@@ -4,6 +4,7 @@ namespace humanized\maintenance\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "maintenance".
@@ -30,7 +31,13 @@ class Maintenance extends \yii\db\ActiveRecord {
                 'class' => TimestampBehavior::className(),
                 'createdAtAttribute' => 'time_enabled',
                 'updatedAtAttribute' => 'time_disabled',
-                'value' => new Expression('NOW()'),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'time_enabled',
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'time_disabled',
+                ],
+                'value' => function() {
+            return date('U'); // unix timestamp 
+        },
             ],
         ];
     }
@@ -62,23 +69,27 @@ class Maintenance extends \yii\db\ActiveRecord {
 
     public static function status()
     {
-        return isset(self::current());
+        $models = Maintenance::find()->where(['IS', 'time_disabled', NULL])->all();
+        return count($models) == 0 ? FALSE : TRUE;
     }
 
     public static function enable($msg)
     {
+
         if (!self::status()) {
             $model = new Maintenance(['comment' => $msg]);
-            $model->time_disabled = NULL;
+            $model->time_enabled = date('U');
+
             return $model->save();
         }
+
         return false;
     }
 
     public static function disable()
     {
         if (self::status()) {
-            $models = self::findAll(['IS', 'time_disabled', NULL]);
+            $models = Maintenance::find()->where(['IS', 'time_disabled', NULL])->all();
             foreach ($models as $model) {
                 $model->touch('time_disabled');
             }
@@ -89,12 +100,7 @@ class Maintenance extends \yii\db\ActiveRecord {
 
     public static function current()
     {
-        if (self::status()) {
-            return self::findOne(['IS', 'time_disabled', NULL]);
-        }
-        return NULL;
+        return self::findOne(['IS', 'time_disabled', 'NULL']);
     }
-    
-    
 
 }
