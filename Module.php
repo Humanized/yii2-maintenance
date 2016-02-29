@@ -1,6 +1,6 @@
 <?php
 
-namespace humanized\maintainable;
+namespace humanized\maintenance;
 
 /**
  * Humanized Maintenance for Yii2
