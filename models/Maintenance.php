@@ -1,6 +1,6 @@
 <?php
 
-namespace humanized\maintainable\models;
+namespace humanized\maintenance\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
