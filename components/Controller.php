@@ -1,26 +1,27 @@
 <?php
 
-namespace humanized\maintainable\components;
+namespace humanized\maintenance\components;
 
-use yii\web\Controller as SuperClass;
-use humanized\maintainable\models\Maintenance;
-use Yii;
+use yii\web\Controller as YiiController;
+use humanized\maintenance\models\Maintenance;
 
 /**
  * SearchController wires the various display actions.
  */
-class Controller extends SuperClass {
+class Controller extends YiiController {
 
-    protected $maintenance = FALSE;
-    protected $maintenceRedirect = NULL;
+    protected $maintenanceModuleName = 'maintenance';
 
     public function beforeAction($action)
     {
+        //Get Module Parameters through protected maintenanceModuleName variable
+        // get the module to which the currently requested controller belongs
+        $module = \Yii::$app->getModule($this->maintenanceModuleName);
+
         //return parent call when maintenance is disbled or user has read permission
-        if (Maintenance::status() && !\humanized\maintainable\Module::getInstance()->params->canRead) {
-            $this->maintenance = TRUE;
-            $this->redirect([\humanized\maintainable\Module::getInstance()->id . "/default/index"]);
-            
+        //Get Maintenance Read Permission
+        if (Maintenance::status() && !$module->params['canRead']) {
+            $this->redirect(["/" . $this->maintenanceModuleName]);
         }
         return parent::beforeAction($action);
     }

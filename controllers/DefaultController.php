@@ -1,14 +1,14 @@
 <?php
 
-namespace humanized\maintenance\components;
+namespace humanized\maintenance\controllers;
 
-use yii\web\Controller as SuperClass;
 use humanized\maintenance\models\Maintenance;
+use yii\web\Controller;
 
 /**
  * SearchController wires the various display actions.
  */
-class DefaultController extends SuperClass {
+class DefaultController extends Controller {
 
     public function actionIndex()
     {

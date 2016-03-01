@@ -75,14 +75,11 @@ class Maintenance extends \yii\db\ActiveRecord {
 
     public static function enable($msg)
     {
-
         if (!self::status()) {
             $model = new Maintenance(['comment' => $msg]);
             $model->time_enabled = date('U');
-
             return $model->save();
         }
-
         return false;
     }
 
@@ -100,7 +97,8 @@ class Maintenance extends \yii\db\ActiveRecord {
 
     public static function current()
     {
-        return self::findOne(['IS', 'time_disabled', 'NULL']);
+        $model = Maintenance::find()->where(['IS', 'time_disabled', NULL])->one();
+        return $model;
     }
 
 }
