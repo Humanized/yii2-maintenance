@@ -1,3 +1,7 @@
+<?php
+$this->title = 'System in Maintenance';
+?>
+
 <div class="row">
     <div class="col-xs-12">
         <h1>System in Maintenance</h1>
