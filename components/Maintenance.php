@@ -11,26 +11,25 @@ namespace humanized\maintenance\components;
 class Maintenance extends \yii\base\Behavior
 {
 
+    public $exceptions = [];
+
     public function events()
     {
         return [
-            \yii\web\Application::EVENT_BEFORE_REQUEST => 'redirectAll'
+            \yii\web\Application::EVENT_BEFORE_ACTION => 'redirectAll'
         ];
     }
 
     public function redirectAll($event)
     {
+        if (\humanized\maintenance\models\Maintenance::status() && (\Yii::$app->user->isGuest || !\Yii::$app->user->can(\common\components\AuthItemHelper::MAINTENANCE_READ))) {
+            $exceptions = array_merge(['maintenance/default/index', \Yii::$app->user->loginUrl[0]], $this->exceptions);
+            if (!in_array(\Yii::$app->controller->getRoute(), $exceptions)) {
 
-        \yii\helpers\VarDumper::dump(get_class($event->sender));
-        //Get the current route
-        // echo \Yii::$app->urlManager->parseUrl(\Yii::$app->request);
-        if (\humanized\maintenance\models\Maintenance::status()) {
-            //Check if Maintenance Read Restrictions Apply
-            if (\Yii::$app->user->isGuest || !\Yii::$app->user->isGuest->can(\common\components\AuthItemHelper::MAINTENANCE_READ)) {
-                //Only allow access to login page
-                //Catch all other requests (not functioning properly)
-                \Yii::$app->catchAll = ['/maintenance/default/index'];
-                //   return \Yii::$app->runAction('site/contact');
+                //Check if Maintenance Read Restrictions Apply
+                if (\Yii::$app->user->isGuest || !\Yii::$app->user->can(\common\components\AuthItemHelper::MAINTENANCE_READ)) {
+                    return \Yii::$app->runAction('/maintenance/default/index');
+                }
             }
         }
     }
