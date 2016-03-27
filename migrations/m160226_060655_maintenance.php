@@ -10,7 +10,7 @@ class m160226_060655_maintenance extends Migration {
             'id' => $this->primaryKey(),
             'time_enabled' => $this->integer()->notNull(),
             'time_disabled' => $this->integer(),
-            'comment' => $this->text(),
+            'message' => $this->text(),
         ]);
     }
 

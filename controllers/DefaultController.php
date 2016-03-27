@@ -9,20 +9,24 @@ use Yii;
 /**
  * DefaultController for Maintenance Mode.
  */
-class DefaultController extends Controller {
+class DefaultController extends Controller
+{
 
+    /**
+     * 
+     * 
+     * @return \yii\base\InvalidRouteException|\yii\web\HttpException
+     * @see http://www.checkupdown.com/status/E503.html HTTP Error 503 - Service Unavailable
+     */
     public function actionIndex()
     {
-        if (Maintenance::status()) {
-            return $this->render('index');
-        }
-        return new \yii\base\InvalidRouteException("Maintenance mode is disabled");
+        return new \yii\web\HttpException(Maintenance::status() ? 404 : 503, (Maintenance::status() ? 'The requested page does not exist' : Maintenance::current()->message));
     }
 
     public function actionEnable()
     {
         if (Yii::$app->controller->module->params['canWrite'] && Maintenance::status()) {
-            $msg = Yii::$app->request->post('comment');
+            $msg = Yii::$app->request->post('msg');
             if (isset($msg)) {
                 Maintenance::enable($msg);
                 return $this->goBack();

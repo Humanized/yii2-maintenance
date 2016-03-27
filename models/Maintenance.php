@@ -51,7 +51,7 @@ class Maintenance extends \yii\db\ActiveRecord
         return [
             [['time_enabled'], 'required'],
             [['time_enabled', 'time_disabled'], 'integer'],
-            [['comment'], 'string'],
+            [['message'], 'string'],
         ];
     }
 
@@ -64,7 +64,7 @@ class Maintenance extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'time_enabled' => Yii::t('app', 'Time Enabled'),
             'time_disabled' => Yii::t('app', 'Time Disabled'),
-            'comment' => Yii::t('app', 'Comment'),
+            'message' => Yii::t('app', 'Message'),
         ];
     }
 
