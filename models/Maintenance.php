@@ -14,7 +14,8 @@ use yii\db\ActiveRecord;
  * @property integer $time_disabled
  * @property string $comment
  */
-class Maintenance extends \yii\db\ActiveRecord {
+class Maintenance extends \yii\db\ActiveRecord
+{
 
     /**
      * @inheritdoc
