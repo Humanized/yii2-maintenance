@@ -1,5 +1,6 @@
 # Yii2 Maintenance - README
-A database driven maintenance module for Yii2 projects
+
+A module for providing maintenance mode redirection for Yii2 web applications
 
 ## Installation
 
