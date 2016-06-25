@@ -44,7 +44,7 @@ return [
     'id' => 'application-name',
     ...
     'as beforeAction'=>[ 
-      'class'=>'humanized\maintenance\component\RedirectBehavior',
+      'class'=>'humanized\maintenance\components\RedirectBehavior',
     ]
     ...
 ],

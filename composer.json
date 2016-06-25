@@ -6,11 +6,11 @@
     "license": "GPL-3.0",
     "version": "0.0.1",
     "support": {
-        "issues": "https://github.com/Humanized/yii2-clihelpers/issues",
+        "issues": "https://github.com/humanized/yii2-maintenance/issues",
         "forum": "http://www.yiiframework.com/forum/",
-        "wiki": "https://github.com/Humanized/yii2-clihelpers/wiki",
+        "wiki": "https://github.com/humanized/yii2-maintenance/wiki",
         "irc": "irc://irc.freenode.net/yii",
-        "source": "https://github.com/humanized/yii2-clihelpers"
+        "source": "https://github.com/humanized/yii2-maintenance"
     },
     "authors": [
         {

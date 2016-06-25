@@ -5,41 +5,37 @@ namespace humanized\maintenance\controllers;
 use humanized\maintenance\models\Maintenance;
 use yii\web\Controller;
 use Yii;
-use yii\web\HttpException;
 
 /**
- * 
+ * Controller for maintenance-mode switch.
+ * @author Jeffrey Geyssens <jeffrey@humanized.be>
  */
-class DefaultController extends Controller
+class SwitchController extends Controller
 {
 
-    /**
-     * @inheritdoc
-     */
-    public function actions()
+    public function actionEnable()
     {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-        ];
+        Maintenance::enable();
+        exit;
+    }
+
+    public function actionDisable()
+    {
+        Maintenance::disable();
+        exit;
     }
 
     /**
      * 
      * 
-     * @return \yii\web\HttpException
+     * @return \yii\base\InvalidRouteException|\yii\web\HttpException
      * @see http://www.checkupdown.com/status/E503.html HTTP Error 503 - Service Unavailable
      */
-    public function actionIndex()
-    {
-
-        throw new HttpException(503, 'Site in Maintenance');
-        // return new HttpException(503, '<br><br><br><br><br><br><br><br><br><br>hello---------------world');
-        //return new \yii\web\HttpException(Maintenance::status() ? 404 : 503, (Maintenance::status() ? 'The requested page does not exist' : Maintenance::current()->message));
-    }
-
     /*
+      public function actionIndex()
+      {
+      return new \yii\web\HttpException(Maintenance::status() ? 404 : 503, (Maintenance::status() ? 'The requested page does not exist' : Maintenance::current()->message));
+      }
 
       public function actionEnable()
       {

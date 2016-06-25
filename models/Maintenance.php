@@ -3,103 +3,40 @@
 namespace humanized\maintenance\models;
 
 use Yii;
-use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveRecord;
 
-/**
- * This is the model class for table "maintenance".
- *
- * @property integer $id
- * @property integer $time_enabled
- * @property integer $time_disabled
- * @property string $comment
- */
-class Maintenance extends \yii\db\ActiveRecord
+class Maintenance extends \yii\base\Model
 {
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
+    public static function isEnabled()
     {
-        return 'maintenance';
+        return file_exists(self::getFilePath());
     }
 
-    public function behaviors()
+    public static function isDisabled()
     {
-        return [
-            [
-                'class' => TimestampBehavior::className(),
-                'createdAtAttribute' => 'time_enabled',
-                'updatedAtAttribute' => 'time_disabled',
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => 'time_enabled',
-                    ActiveRecord::EVENT_BEFORE_UPDATE => 'time_disabled',
-                ],
-                'value' => function() {
-            return date('U'); // unix timestamp 
-        },
-            ],
-        ];
+        return !self::isEnabled();
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function rules()
+    public static function enable()
     {
-        return [
-            [['time_enabled'], 'required'],
-            [['time_enabled', 'time_disabled'], 'integer'],
-            [['message'], 'string'],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => Yii::t('app', 'ID'),
-            'time_enabled' => Yii::t('app', 'Time Enabled'),
-            'time_disabled' => Yii::t('app', 'Time Disabled'),
-            'message' => Yii::t('app', 'Message'),
-        ];
-    }
-
-    public static function status()
-    {
-        $models = Maintenance::find()->where(['IS', 'time_disabled', NULL])->all();
-        return count($models) == 0 ? FALSE : TRUE;
-    }
-
-    public static function enable($msg)
-    {
-        if (!self::status()) {
-            $model = new Maintenance(['comment' => $msg]);
-            $model->time_enabled = date('U');
-            return $model->save();
+        if (self::isDisabled()) {
+            return touch(self::getFilePath());
         }
         return false;
     }
 
     public static function disable()
     {
-        if (self::status()) {
-            $models = Maintenance::find()->where(['IS', 'time_disabled', NULL])->all();
-            foreach ($models as $model) {
-                $model->touch('time_disabled');
-            }
-            return true;
+        if (self::isEnabled()) {
+            return unlink(self::getFilePath());
         }
         return false;
     }
 
-    public static function current()
+    public static function getFilePath()
     {
-        $model = Maintenance::find()->where(['IS', 'time_disabled', NULL])->one();
-        return $model;
+        //     echo Yii::getAlias('@runtime') . '/maintenance' . "\n\n\n";
+        return Yii::getAlias('@maintenance');
     }
 
 }
