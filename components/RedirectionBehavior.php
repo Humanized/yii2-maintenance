@@ -25,14 +25,14 @@ use yii\web\HttpException;
  * The behavior can be bypassed using a variety of configuration options:
  * 
  * <table>
- * <tr><td>bypassRedirect</td><td>boolean or callable evaluating to a boolean</td></tr>
- * <tr><td>bypassRedirectPermission</td><td>Permission to be evaluated using Yii::$app->user->can()</td></tr>
+ * <tr><td>bypassRedirection</td><td>boolean or callable evaluating to a boolean</td></tr>
+ * <tr><td>bypassPermission</td><td>Permission to be evaluated using Yii::$app->user->can()</td></tr>
  * <tr><td>whitelist</td><td>Array of routes which bypass redirection</td></tr>
  * </table>
  * 
  * 
- * 
- *
+ * @name Maintenance Module Redirection Behavior
+ * @package yii2-maintenance
  * @author Jeffrey Geyssens <jeffrey@humanized.be>
  * @since 1.0
  */
@@ -47,37 +47,43 @@ class RedirectionBehavior extends \yii\base\Behavior
 
     /**
      *
-     * @var string the messageCategory used by Yii::t for translation purposes
+     * @var string the message-category used by Yii::t for translation purposes
      */
-    public $messageCategory = 'appx';
+    public $messageCategory = 'app';
 
     /**
      *
-     * @var type string  Permission to be evaluated using Yii::$app->user->can()
+     * @var type boolean
      */
-    public $bypassRedirectPermission = null;
+    public $force = false;
 
     /**
      *
-     * @var boolean|callable 
+     * @var type string  Permission to be evaluated using Yii::$app->user->can() - bypasses redirection when evaluating to true
      */
-    public $bypassRedirect = false;
+    public $bypassPermission = null;
 
     /**
      *
-     * @var boolean  
+     * @var boolean|callable boolean or callback having boolean return value - bypasses redirection when evaluating to true 
+     */
+    public $bypassRedirection = false;
+
+    /**
+     *
+     * @var boolean disable redirection for route setup by loginUrl through the Yii::$app->user component
      */
     public $whitelistLoginUrl = true;
 
     /**
      *
-     * @var boolean
+     * @var boolean disable redirection for route setup by errorAction through the Yii::$app->errorHandler component
      */
     public $whitelistErrorHandler = true;
 
     /**
      *
-     * @var array 
+     * @var array disable redirection for routes
      */
     public $whitelist = [];
 
@@ -99,61 +105,48 @@ class RedirectionBehavior extends \yii\base\Behavior
      */
     public function run($event)
     {
-        if ($this->whitelistErrorHandler) {
-            $this->whitelist[] = Yii::$app->errorHandler->errorAction;
-        }
-        if ($this->whitelistLoginUrl) {
-            $this->whitelist[] = Yii::$app->user->loginUrl[0];
-        }
-        if (Maintenance::isEnabled() &&
-                (!isset($this->bypassRedirectPermission) ? true : !Yii::$app->user->can($this->bypassRedirectPermission)) &&
-                !$this->evalBypassRedirect() && !$this->isWhitelisted()) {
+
+        //Throw Http Exception 503 Exception if maintenance mode is applicable
+        if (Maintenance::isEnabled() && $this->forbidBypass() && !$this->isWhiteListed()) {
             throw new HttpException(503, Yii::t($this->messageCategory, $this->message));
         }
     }
 
     /**
      * 
-     * @return type
+     * @return boolean
      */
     protected function isWhiteListed()
     {
-        return in_array(Yii::$app->controller->getRoute(), $this->whitelist);
+        $route = Yii::$app->controller->getRoute();
+        if ($this->whitelistErrorHandler && $route == Yii::$app->errorHandler->errorAction) {
+            return true;
+        }
+        if ($this->whitelistLoginUrl && $route == Yii::$app->user->loginUrl[0]) {
+            return true;
+        }
+        return in_array($route, $this->whitelist);
     }
 
     /**
-     * 
+     * @return boolean
      */
-    protected function evalBypassRedirect()
+    protected function forbidBypass()
     {
-        $bypass = false;
-        if (!$bypass) {
-            if (is_bool($this->bypassRedirect)) {
-                $bypass = $this->bypassRedirect;
-            }
-            if (is_callable($this->bypassRedirect)) {
-                $bypass = call_user_func($this->bypassRedirect);
-            }
+        //forbid bypass redirection by permission
+        if (isset($this->bypassPermission) && !Yii::$app->user->can($this->bypassPermission)) {
+            return true;
         }
-        return $bypass;
+        //forbid bypass redirection by boolean flag
+        if (is_bool($this->bypassRedirection)) {
+            return !$this->bypassRedirection;
+        }
+
+        //forbid bypass redirection by callback evaluation
+        if (is_callable($this->bypassRedirection)) {
+            return !call_user_func($this->bypassRedirection);
+        }
+        return true;
     }
 
-    /*
-      public function redirectAll($event)
-      {
-
-
-      if (\humanized\maintenance\models\Maintenance::status() && (\Yii::$app->user->isGuest || !\Yii::$app->user->can(\common\components\AuthItemHelper::MAINTENANCE_READ))) {
-      $exceptions = array_merge(['maintenance/default/index', \Yii::$app->user->loginUrl[0]], $this->exceptions);
-      if (!in_array(\Yii::$app->controller->getRoute(), $exceptions)) {
-
-      //Check if Maintenance Read Restrictions Apply
-      if (\Yii::$app->user->isGuest || !\Yii::$app->user->can(\common\components\AuthItemHelper::MAINTENANCE_READ)) {
-      return \Yii::$app->runAction('/maintenance/default/index');
-      }
-      }
-      }
-      }
-     * 
-     */
 }
