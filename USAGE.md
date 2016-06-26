@@ -17,7 +17,7 @@ return [
 ],
 ```
 
-### Bypass Redirection Behavior
+### Bypassing Redirection Behavior
 
 ### Whitelisting Routes
 
