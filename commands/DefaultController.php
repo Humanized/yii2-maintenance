@@ -3,7 +3,7 @@
 /**
  * @link https://github.com/humanized/yii2-maintenance
  * @copyright Copyright (c) 2016 Humanized BV Comm V
- * @license https://github.com/humanized/yii2-maintenance/LICENSE
+ * @license https://github.com/humanized/yii2-maintenance/LICENSE.md
  */
 
 namespace humanized\maintenance\commands;
@@ -12,13 +12,20 @@ use humanized\maintenance\models\Maintenance;
 
 /**
  * 
- * Maintenance mode can be managed through command-line interface
+ * Maintenance mode can be managed through command-line interface.
  * 
- * When applying the behavior to multiple targets, it may be desirable to specify  
+ * Usage: php yii <module-name> enable|disable|status -a=<path-alias> (optional) -p=<path> (optional)'
+ * 
+ * 
+ * 
+ * When applying the behavior to multiple targets, it may be desirable to specify an alternative path or alias.
+ * By default, the alias "@maintenance" is used.
+ * 
+ *  
  * 
  * 
  * @name Yii2 Maintenance Module CLI
- * @version 0.1
+ * @version 1.0
  * @author Jeffrey Geyssens <jeffrey@humanized.be>
  * @package yii2-maintenance
  * 
@@ -40,8 +47,6 @@ class DefaultController extends \yii\console\Controller
     }
 
     /**
-     * 
-     * Usage: php yii <module-name> enable|disable|status -a=<path-alias> (optional) -p=<path> (optional)'
      * 
      * @param string $cmd - enable|disable|status
      * @return int
@@ -78,11 +83,9 @@ class DefaultController extends \yii\console\Controller
                 }
             case 'enable' :
             case 'disable': {
-                    $success = call_user_func([new Maintenance(), $cmd]);
-                    $this->_status();
+                    $this->_status(!call_user_func([new Maintenance(), $cmd]));
                     break;
                 }
-
             default : {
                     $this->stdout('Yii2 Maintenance Mode CLI Usage: php yii <module-name> enable|disable|status');
                     break;
@@ -90,9 +93,9 @@ class DefaultController extends \yii\console\Controller
         }
     }
 
-    private function _status()
+    private function _status($alt = false)
     {
-        $this->stdout('Maintenance Mode ' . (Maintenance::isEnabled() ? 'Enabled' : 'Disabled'));
+        $this->stdout('Maintenance Mode ' . ($alt ? 'Already ' : '') . (Maintenance::isEnabled() ? 'Enabled' : 'Disabled'));
     }
 
 }
