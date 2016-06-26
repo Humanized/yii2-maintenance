@@ -16,22 +16,24 @@ use yii\web\HttpException;
 
 /**
  * RedirectionBehavior is triggered by a before-controller-action event.
+ * 
  * When attached to a controller, a 503 - Service Unavailable - HTTP exception is thrown when maintenance mode is enabled.
  * 
+ * Maintenance mode can be forced by configuration, by setting the force parameter to true
+ * 
  * A custom message display can be set using the message parameter
- * The message supports internationalised through specification of the messageCatagory parameter
+ * The message can be internationalised through use of the messageCatagory parameter
  * 
  *   
  * The behavior can be bypassed using a variety of configuration options:
- * 
  * <table>
- * <tr><td>bypassRedirection</td><td>boolean or callable evaluating to a boolean</td></tr>
- * <tr><td>bypassPermission</td><td>Permission to be evaluated using Yii::$app->user->can()</td></tr>
- * <tr><td>whitelist</td><td>Array of routes which bypass redirection</td></tr>
+ * <tr><td><b>bypassRedirection</b></td><td>boolean or callable evaluating to a boolean</td></tr>
+ * <tr><td><b>bypassPermission</b></td><td>Permission to be evaluated using Yii::$app->user->can()</td></tr>
+ * <tr><td><b>whitelist</b></td><td>Array of routes which bypass redirection</td></tr>
  * </table>
  * 
  * 
- * @name Maintenance Module Redirection Behavior
+ * @name Maintenance Mode Redirection Behavior
  * @package yii2-maintenance
  * @author Jeffrey Geyssens <jeffrey@humanized.be>
  * @since 1.0
@@ -41,49 +43,56 @@ class RedirectionBehavior extends \yii\base\Behavior
 
     /**
      *
-     * @var string the message to display when site is in maintenance mode 
+     * @var string The message to display when site is in maintenance mode 
      */
     public $message = 'Site in Maintenance';
 
     /**
      *
-     * @var string the message-category used by Yii::t for translation purposes
+     * @var string The message-category used by Yii::t for translation purposes
+     * @default 'app'
      */
     public $messageCategory = 'app';
 
     /**
      *
-     * @var type boolean
+     * @var boolean Force redirection by overriding maintenance-mode status check
+     * @default false 
      */
     public $force = false;
 
     /**
      *
-     * @var type string  Permission to be evaluated using Yii::$app->user->can() - bypasses redirection when evaluating to true
+     * @var string  Permission to be evaluated using Yii::$app->user->can() - bypasses redirection when evaluating to true
+     * @default null 
      */
     public $bypassPermission = null;
 
     /**
      *
-     * @var boolean|callable boolean or callback having boolean return value - bypasses redirection when evaluating to true 
+     * @var boolean|callable Bypass redirection when evaluating to true. A boolean flag or callable
+     * @default false 
      */
     public $bypassRedirection = false;
 
     /**
      *
      * @var boolean disable redirection for route setup by loginUrl through the Yii::$app->user component
+     * @default true 
      */
     public $whitelistLoginUrl = true;
 
     /**
      *
      * @var boolean disable redirection for route setup by errorAction through the Yii::$app->errorHandler component
+     * @default true 
      */
     public $whitelistErrorHandler = true;
 
     /**
      *
      * @var array disable redirection for routes
+     * @default [] 
      */
     public $whitelist = [];
 
@@ -100,38 +109,29 @@ class RedirectionBehavior extends \yii\base\Behavior
 
     /**
      * 
-     * @param Event $event
-     * @return HttpException
+     * @param type $event
+     * @throws HttpException - Http Exception "#503 - Resource not available" is thrown when redirection is applicable
      */
     public function run($event)
     {
-
-        //Throw Http Exception 503 Exception if maintenance mode is applicable
-        if (Maintenance::isEnabled() && $this->forbidBypass() && !$this->isWhiteListed()) {
+        if ($this->isRedirectionEnabled() && $this->isBypassForbidden() && !$this->isRouteWhitelisted()) {
             throw new HttpException(503, Yii::t($this->messageCategory, $this->message));
         }
     }
 
     /**
      * 
-     * @return boolean
+     * @return boolean unless the force option is set to true, the maintenance-mode status is returned 
      */
-    protected function isWhiteListed()
+    protected function isRedirectionEnabled()
     {
-        $route = Yii::$app->controller->getRoute();
-        if ($this->whitelistErrorHandler && $route == Yii::$app->errorHandler->errorAction) {
-            return true;
-        }
-        if ($this->whitelistLoginUrl && $route == Yii::$app->user->loginUrl[0]) {
-            return true;
-        }
-        return in_array($route, $this->whitelist);
+        return !$this->force ? Maintenance::isEnabled() : true;
     }
 
     /**
-     * @return boolean
+     * @return boolean false when a bypass condition is met, true otherwise
      */
-    protected function forbidBypass()
+    protected function isBypassForbidden()
     {
         //forbid bypass redirection by permission
         if (isset($this->bypassPermission) && !Yii::$app->user->can($this->bypassPermission)) {
@@ -147,6 +147,22 @@ class RedirectionBehavior extends \yii\base\Behavior
             return !call_user_func($this->bypassRedirection);
         }
         return true;
+    }
+
+    /**
+     * 
+     * @return boolean - true when current route is contained in the whitelist array, false otherwise
+     */
+    protected function isRoutewhiteListed()
+    {
+        $route = Yii::$app->controller->getRoute();
+        if ($this->whitelistErrorHandler && $route == Yii::$app->errorHandler->errorAction) {
+            return true;
+        }
+        if ($this->whitelistLoginUrl && $route == Yii::$app->user->loginUrl[0]) {
+            return true;
+        }
+        return in_array($route, $this->whitelist);
     }
 
 }
