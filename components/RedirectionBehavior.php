@@ -3,7 +3,7 @@
 /**
  * @link https://github.com/humanized/yii2-maintenance
  * @copyright Copyright (c) 2016 Humanized BV Comm V
- * @license https://github.com/humanized/yii2-maintenance/LICENSE
+ * @license https://github.com/humanized/yii2-maintenance/LICENSE.md
  */
 
 namespace humanized\maintenance\components;
