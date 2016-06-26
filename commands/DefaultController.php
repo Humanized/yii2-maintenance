@@ -12,17 +12,17 @@ use humanized\maintenance\models\Maintenance;
 
 /**
  * 
- * Maintenance mode can be managed through command-line interface.
+ * Maintenance mode can be toggled through command-line interface.
+ * 
+ * Usage: php yii <module-name> enable|disable|status'
+ * 
+ * 
+ * When applying the behavior to multiple targets, it may be desirable to specify an alternative path or alias (mutually exclusive).
  * 
  * Usage: php yii <module-name> enable|disable|status -a=<path-alias> (optional) -p=<path> (optional)'
  * 
- * 
- * 
- * When applying the behavior to multiple targets, it may be desirable to specify an alternative path or alias.
  * By default, the alias "@maintenance" is used.
- * 
  *  
- * 
  * 
  * @name Yii2 Maintenance Module CLI
  * @version 1.0
@@ -33,14 +33,31 @@ use humanized\maintenance\models\Maintenance;
 class DefaultController extends \yii\console\Controller
 {
 
+    /**
+     *
+     * @var type 
+     */
     public $alias = null;
+
+    /**
+     *
+     * @var type 
+     */
     public $path = null;
 
+    /**
+     * 
+     * @inheritdoc
+     */
     public function options()
     {
         return ['alias', 'path'];
     }
 
+    /**
+     * 
+     * @inheritdoc
+     */
     public function optionAliases()
     {
         return ['a' => 'alias', 'p' => 'path'];
