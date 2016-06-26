@@ -36,7 +36,7 @@ use yii\web\HttpException;
  * @name Maintenance Mode Redirection Behavior
  * @package yii2-maintenance
  * @author Jeffrey Geyssens <jeffrey@humanized.be>
- * @since 1.0
+ * @version 1.0
  */
 class RedirectionBehavior extends \yii\base\Behavior
 {
