@@ -10,8 +10,6 @@ namespace humanized\maintenance\components;
 
 use humanized\maintenance\models\Maintenance;
 use Yii;
-use yii\helpers\Html;
-use yii\base\Event;
 use yii\web\HttpException;
 
 /**
@@ -24,14 +22,17 @@ use yii\web\HttpException;
  * A custom message display can be set using the message parameter
  * The message can be internationalised through use of the messageCatagory parameter
  * 
+ * By default, redirection is disabled for routes set through Yii::$app->errorHandler->errorAction and Yii::$app->user->loginUrl[0]
+ * This can be enabled by setting the whitelistLoginUrl and whitelistErrorAction to false 
  *   
- * The behavior can be bypassed using a variety of configuration options:
+ * The behavior can be further bypassed using a variety of configuration options:
  * <table>
  * <tr><td><b>bypassRedirection</b></td><td>boolean or callable evaluating to a boolean</td></tr>
  * <tr><td><b>bypassPermission</b></td><td>Permission to be evaluated using Yii::$app->user->can()</td></tr>
  * <tr><td><b>whitelist</b></td><td>Array of routes which bypass redirection</td></tr>
  * </table>
  * 
+
  * 
  * @name Maintenance Mode Redirection Behavior
  * @package yii2-maintenance
@@ -87,7 +88,7 @@ class RedirectionBehavior extends \yii\base\Behavior
      * @var boolean disable redirection for route setup by errorAction through the Yii::$app->errorHandler component
      * @default true 
      */
-    public $whitelistErrorHandler = true;
+    public $whitelistErrorAction = true;
 
     /**
      *
@@ -156,7 +157,7 @@ class RedirectionBehavior extends \yii\base\Behavior
     protected function isRoutewhiteListed()
     {
         $route = Yii::$app->controller->getRoute();
-        if ($this->whitelistErrorHandler && $route == Yii::$app->errorHandler->errorAction) {
+        if ($this->whitelistErrorAction && $route == Yii::$app->errorHandler->errorAction) {
             return true;
         }
         if ($this->whitelistLoginUrl && $route == Yii::$app->user->loginUrl[0]) {
