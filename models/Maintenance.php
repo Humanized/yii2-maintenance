@@ -7,8 +7,6 @@ use Yii;
 class Maintenance extends \yii\base\Model
 {
 
-    public $whitelist = [];
-
     public static function isEnabled()
     {
         return file_exists(self::getFilePath());

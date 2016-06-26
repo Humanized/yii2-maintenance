@@ -15,9 +15,21 @@ use yii\base\Event;
 use yii\web\HttpException;
 
 /**
- * MaintenanceBehavior is triggered by a before action event.
- * When attached, it throws a 503 HTTP error when maintenance mode is enabled.
- * Individual routes can be added to the whitelisted to bypass the behavior.
+ * RedirectionBehavior is triggered by a before-controller-action event.
+ * When attached to a controller, a 503 - Service Unavailable - HTTP exception is thrown when maintenance mode is enabled.
+ * 
+ * A custom message display can be set using the message parameter
+ * The message supports internationalised through specification of the messageCatagory parameter
+ * 
+ *   
+ * The behavior can be bypassed using a variety of configuration options:
+ * 
+ * <table>
+ * <tr><td>bypassRedirect</td><td>boolean or callable evaluating to a boolean</td></tr>
+ * <tr><td>bypassRedirectPermission</td><td>Permission to be evaluated using Yii::$app->user->can()</td></tr>
+ * <tr><td>whitelist</td><td>Array of routes which bypass redirection</td></tr>
+ * </table>
+ * 
  * 
  * 
  *
@@ -31,11 +43,17 @@ class RedirectionBehavior extends \yii\base\Behavior
      *
      * @var string the message to display when site is in maintenance mode 
      */
-    public $msg = 'Site in Maintenance';
+    public $message = 'Site in Maintenance';
 
     /**
      *
-     * @var type string   
+     * @var string the messageCategory used by Yii::t for translation purposes
+     */
+    public $messageCategory = 'appx';
+
+    /**
+     *
+     * @var type string  Permission to be evaluated using Yii::$app->user->can()
      */
     public $bypassRedirectPermission = null;
 
@@ -63,6 +81,10 @@ class RedirectionBehavior extends \yii\base\Behavior
      */
     public $whitelist = [];
 
+    /**
+     * 
+     * @inheritdoc
+     */
     public function events()
     {
         return [
@@ -85,8 +107,8 @@ class RedirectionBehavior extends \yii\base\Behavior
         }
         if (Maintenance::isEnabled() &&
                 (!isset($this->bypassRedirectPermission) ? true : !Yii::$app->user->can($this->bypassRedirectPermission)) &&
-                !$this->bypassRedirect() && !$this->isWhitelisted()) {
-            throw new HttpException(503, $this->msg);
+                !$this->evalBypassRedirect() && !$this->isWhitelisted()) {
+            throw new HttpException(503, Yii::t($this->messageCategory, $this->message));
         }
     }
 
@@ -102,7 +124,7 @@ class RedirectionBehavior extends \yii\base\Behavior
     /**
      * 
      */
-    protected function byPassRedirect()
+    protected function evalBypassRedirect()
     {
         $bypass = false;
         if (!$bypass) {
@@ -110,7 +132,7 @@ class RedirectionBehavior extends \yii\base\Behavior
                 $bypass = $this->bypassRedirect;
             }
             if (is_callable($this->bypassRedirect)) {
-                $bypass = call_user_func($this->bypassRedirect, [Yii::$app->controller->getRoute()]);
+                $bypass = call_user_func($this->bypassRedirect);
             }
         }
         return $bypass;
