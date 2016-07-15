@@ -49,3 +49,13 @@ Bypass redirection for route setup by errorAction through the Yii::$app->errorHa
 ### Whitelisting Routes
 
 ## Command Line Interface
+
+Maintenance mode can be toggled through command-line interface.
+ 
+Usage: php yii <module-name> enable|disable|status'
+
+When applying the behavior to multiple targets, it may be desirable to specify an alternative path or alias (mutually exclusive).
+ 
+Usage: php yii <module-name> enable|disable|status -a=<path-alias> (optional) -p=<path> (optional)'
+ 
+By default, the alias "@maintenance" is used.
