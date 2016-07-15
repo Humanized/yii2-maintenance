@@ -24,30 +24,29 @@ return [
 By default, all requests are caught and a 503 HTTP Exception is thrown. The behavior provides multiple ways to bypass the default redirection flow. 
 
 
-#### force (boolean)
+#### -force (boolean)
 
 Bypasses standard maintenance-mode status check, forcing it to always evaluate to true
 
-#### bypassPermission (string)
+#### -bypassPermission (string)
 
 Permission to be evaluated using Yii::$app->user->can() - Bypasses redirection when evaluating to true
 
-#### bypassRedirection (boolean|callable)
+#### -bypassRedirection (boolean|callable)
 
 Bypasses redirection when evaluating to true
 
 When using a callback, use a function without parameters which returns a boolean value
 
-
-#### whitelistLoginUrl
+#### -whitelistLoginUrl
 
 Bypass redirection for route setup by loginUrl through the Yii::$app->user component
 
-#### whitelistErrorAction
+#### -whitelistErrorAction
 
 Bypass redirection for route setup by errorAction through the Yii::$app->errorHandler component
 
-#### whitelist
+#### -whitelist
 
 Array containing individual routes (e.g. /path/to/route) which bypass the redirection
 
