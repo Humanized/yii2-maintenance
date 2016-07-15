@@ -63,6 +63,8 @@ return [
 ],
 ```
 
+For full instructions on how to configure the behavior, check the [CONFIG](CONFIG.md)-file.
+
 ### Step 3 (Optional)
 
 Add following lines to the console configuration file to enable the CLI:
