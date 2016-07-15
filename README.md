@@ -22,9 +22,50 @@ or add
 
 to the ```require``` section of your `composer.json` file.
 
-## Edit Configuration File
+## Configuration
 
-Add following lines to the configuration file:
+### Prerequisites
+
+By default, redirection is disabled for routes set through Yii::$app->errorHandler->errorAction and Yii::$app->user->loginUrl[0]
+
+Ensure that appropriate values are set through respective component configuration parameters. 
+
+This can be enabled by setting the whitelistLoginUrl and whitelistErrorAction to false 
+
+### Step 1
+
+The module works by creating/dropping a file somewhere on the filesystem. To specify it's path, add an alias "@maintenance" to the the config/bootstrap file:
+
+```php
+Yii::setAlias('@common', dirname(__DIR__));
+Yii::setAlias('@backend', dirname(dirname(__DIR__)) . '/backend');
+Yii::setAlias('@frontend', dirname(dirname(__DIR__)) . '/frontend');
+Yii::setAlias('@maintenance', dirname(dirname(__DIR__)) . '/frontent/runtime/maintenance');
+```
+
+Add specific aliases to different application config/bootstap files to allow maintenance-mode on different applications within the same yii project.
+
+
+### Step 2
+
+The module comes with a redirecton behavior, which is triggered before a controller-action event. When attached to a controller, a 503 - Service Unavailable - HTTP exception is thrown when maintenance mode is enabled. 
+
+To call the behavior before each request of the application to be placed under maintenance, add following lines to the configuration file:
+
+```php
+return [
+    'id' => 'application-name',
+    ...
+    'as beforeAction'=>[ 
+      'class'=>'humanized\maintenance\components\RedirectionBehavior',
+    ]
+    ...
+],
+```
+
+### Step 3 (Optional)
+
+Add following lines to the console configuration file to enable the CLI:
 
 ```php
 'modules' => [
@@ -34,21 +75,8 @@ Add following lines to the configuration file:
 ],
 ```
 
-Adding these lines allows access to the various interfaces provided by the module. 
+Adding these lines allows access to the CLI provided by the module. 
 Here, the chosen module-name is maintenance, as such the various routes will be available at maintenance/controller-id/action-id, though any module-name can be chosen.
-
-Further, it is required that the behavior class provided by the module, is called before each request of the application to be placed under maintenance. For this, add following lines to the configuration file:
-
-```php
-return [
-    'id' => 'application-name',
-    ...
-    'as beforeAction'=>[ 
-      'class'=>'humanized\maintenance\components\RedirectBehavior',
-    ]
-    ...
-],
-```
 
 For full instructions on how to use the fully-configured module, check the [USAGE](USAGE.md)-file.
 
