@@ -12,7 +12,7 @@ return [
     ...
     'as beforeAction'=>[ 
       'class'=>'humanized\maintenance\component\RedirectionBehavior',
-      //Customise options here
+      //Add custom configuration options here
       ...
     ]
     ...
@@ -21,11 +21,12 @@ return [
 
 ### Bypassing Redirection Behavior
 
+By default, all requests are caught and a 503 HTTP Exception is thrown. The behavior provides multiple ways to bypass the default redirection flow. 
 
 
 #### force (boolean)
 
-Bypasses standard maintenance-mode status check, forcing it to always evaluate to true evaluation to true
+Bypasses standard maintenance-mode status check, forcing it to always evaluate to true
 
 #### bypassPermission (string)
 
@@ -35,6 +36,8 @@ Permission to be evaluated using Yii::$app->user->can() - Bypasses redirection w
 #### bypassRedirection (boolean|callable)
 
 Bypasses redirection when evaluating to true
+
+When it
 
 #### whitelist
 
@@ -51,11 +54,17 @@ Bypass redirection for route setup by errorAction through the Yii::$app->errorHa
 ## Command Line Interface
 
 Maintenance mode can be toggled through command-line interface.
- 
-Usage: php yii <module-name> enable|disable|status'
+
+```
+$ php  yii <module-name> enable|disable|status
+``` 
+
 
 When applying the behavior to multiple targets, it may be desirable to specify an alternative path or alias (mutually exclusive).
  
-Usage: php yii <module-name> enable|disable|status -a=<path-alias> (optional) -p=<path> (optional)'
  
-By default, the alias "@maintenance" is used.
+```
+$ php  yii <module-name> enable|disable|status -a=<path-alias> (optional) -p=<path> (optional)
+``` 
+
+By default, the alias "@maintenance" is used which can be configured in the config/bootstrap.php file.
