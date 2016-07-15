@@ -30,7 +30,7 @@ class Maintenance extends \yii\base\Model
      */
     public static function isEnabled()
     {
-        return file_exists(self::getFilePath());
+        return file_exists(Yii::getAlias('@maintenance'));
     }
 
     /**
@@ -42,11 +42,15 @@ class Maintenance extends \yii\base\Model
         return !self::isEnabled();
     }
 
+    /**
+     * 
+     * @return boolean true when maintenance mode is successfully enabled
+     */
     public static function enable()
     {
         if (self::isDisabled()) {
             try {
-                touch(self::getFilePath());
+                touch(Yii::getAlias('@maintenance'));
                 return true;
             } catch (Exception $exc) {
                 //Do nothing
@@ -55,22 +59,21 @@ class Maintenance extends \yii\base\Model
         return false;
     }
 
+    /**
+     * 
+     * @return boolean true when maintenance mode is successfully disabled
+     */
     public static function disable()
     {
         if (self::isEnabled()) {
             try {
-                unlink(self::getFilePath());
+                unlink(Yii::getAlias('@maintenance'));
                 return true;
             } catch (Exception $exc) {
                 //Do nothing
             }
         }
         return false;
-    }
-
-    public static function getFilePath()
-    {
-        return Yii::getAlias('@maintenance');
     }
 
 }

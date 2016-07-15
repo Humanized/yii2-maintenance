@@ -32,7 +32,6 @@ use yii\web\HttpException;
  * <tr><td><b>whitelist</b></td><td>Array of routes which bypass redirection</td></tr>
  * </table>
  * 
-
  * 
  * @name Maintenance Mode Redirection Behavior
  * @version 1.0
@@ -58,7 +57,7 @@ class RedirectionBehavior extends \yii\base\Behavior
 
     /**
      *
-     * @var boolean Force redirection by overriding maintenance-mode status check
+     * @var boolean Bypasses standard maintenance-mode status check, forcing it to always evaluate to true
      * @default false 
      */
     public $force = false;
@@ -113,6 +112,7 @@ class RedirectionBehavior extends \yii\base\Behavior
      * 
      * @param type $event
      * @throws HttpException - Http Exception "#503 - Resource not available" is thrown when redirection is applicable
+     * @see http://www.checkupdown.com/status/E503.html HTTP Error 503 - Service Unavailable
      */
     public function run($event)
     {
