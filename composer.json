@@ -2,9 +2,9 @@
     "name": "humanized/yii2-maintenance",
     "type": "yii2-extension",
     "description": "A database driven maintenance module for Yii2 projects",
-    "keywords": ["yii2", "maintance", "module", "helper"],
+    "keywords": ["yii2", "maintenance", "module", "helper", "cli"],
     "license": "GPL-3.0",
-    "version": "0.0.1",
+    "version": "0.1",
     "support": {
         "issues": "https://github.com/humanized/yii2-maintenance/issues",
         "forum": "http://www.yiiframework.com/forum/",
@@ -23,7 +23,7 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": "@dev"
+        "yiisoft/yii2": ">=2.0"
 
     },
     "autoload": {
