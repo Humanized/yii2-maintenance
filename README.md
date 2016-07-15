@@ -24,6 +24,14 @@ to the ```require``` section of your `composer.json` file.
 
 ## Configuration
 
+### Prerequisites
+
+By default, redirection is disabled for routes set through Yii::$app->errorHandler->errorAction and Yii::$app->user->loginUrl[0]
+
+Ensure that appropriate values are set through respective component configuration parameters. 
+
+This can be enabled by setting the whitelistLoginUrl and whitelistErrorAction to false 
+
 ### Step 1
 
 The module works by creating/dropping a file somewhere on the filesystem. To specify it's path, add an alias "@maintenance" to the the config/bootstrap file:
