@@ -116,7 +116,7 @@ class RedirectionBehavior extends \yii\base\Behavior
      */
     public function run($event)
     {
-        if ($this->isRedirectionEnabled() && $this->isBypassForbidden() && !$this->isRouteWhitelisted()) {
+        if ($this->isRedirectionEnabled() && $this->isBypassByPermission()  && $this->isBypassForbidden() && !$this->isRouteWhitelisted()) {
             throw new HttpException(503, Yii::t($this->messageCategory, $this->message));
         }
     }
@@ -130,15 +130,17 @@ class RedirectionBehavior extends \yii\base\Behavior
         return !$this->force ? Maintenance::isEnabled() : true;
     }
 
+    protected function isBypassByPermission()
+    {
+        return !(isset($this->bypassPermission)) ? false : !Yii::$app->user->can($this->bypassPermission);
+    }
+
     /**
      * @return boolean false when a bypass condition is met, true otherwise
      */
     protected function isBypassForbidden()
     {
-        //forbid bypass redirection by permission
-        if (isset($this->bypassPermission) && !Yii::$app->user->can($this->bypassPermission)) {
-            return true;
-        }
+
         //forbid bypass redirection by boolean flag
         if (is_bool($this->bypassRedirection)) {
             return !$this->bypassRedirection;
