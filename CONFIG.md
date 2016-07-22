@@ -11,7 +11,7 @@ return [
     'id' => 'application-name',
     ...
     'as beforeAction'=>[ 
-      'class'=>'humanized\maintenance\component\RedirectionBehavior',
+      'class'=>'humanized\maintenance\components\RedirectionBehavior',
       //Add custom configuration options here
       ...
     ]
