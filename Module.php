@@ -2,7 +2,7 @@
 
 /**
  * @link https://github.com/humanized/yii2-maintenance
- * @copyright Copyright (c) 2016 Humanized BV Comm V
+ * @copyright Copyright (c) 2016 Humanized 
  * @license https://github.com/humanized/yii2-maintenance/LICENSE
  */
 
@@ -18,7 +18,7 @@ namespace humanized\maintenance;
  * 
  * 
  * @name Yii2 Maintenance Module
- * @version 0.1
+ * @version 1.0
  * @author Jeffrey Geyssens <jeffrey@humanized.be>
  * @package yii2-maintenance
  * 

@@ -11,13 +11,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-$ php composer.phar require humanized/yii2-maintainable "dev-master"
+$ php composer.phar require humanized/yii2-maintenance "dev-master"
 ```
 
 or add
 
 ```
-"humanized/yii2-maintainable": "dev-master"
+"humanized/yii2-maintenance": "dev-master"
 ```
 
 to the ```require``` section of your `composer.json` file.
