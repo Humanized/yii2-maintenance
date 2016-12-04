@@ -15,8 +15,6 @@ namespace humanized\maintenance;
  * 
  * Maintenance mode can be toggled through CLI or through GUI by incorporating the provided widget.
  * 
- * 
- * 
  * @name Yii2 Maintenance Module
  * @version 1.0
  * @author Jeffrey Geyssens <jeffrey@humanized.be>

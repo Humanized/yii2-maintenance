@@ -1,4 +1,4 @@
-# Yii2 Maintenance - USAGE
+# Yii2 Maintenance - CLI
 
 
 ## Command Line Interface

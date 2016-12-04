@@ -63,6 +63,13 @@ class DefaultController extends \yii\console\Controller
         return ['a' => 'alias', 'p' => 'path'];
     }
 
+    public function actions()
+    {
+        return [
+            'toggle' => 'humanized\maintenance\components\ToggleMaintenanceAction',
+        ];
+    }
+
     /**
      * 
      * @param string $cmd - enable|disable|status

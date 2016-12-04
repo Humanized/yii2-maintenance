@@ -57,7 +57,7 @@ return [
     'id' => 'application-name',
     ...
     'as beforeAction'=>[ 
-      'class'=>'humanized\maintenance\components\RedirectionBehavior',
+      'class'=>'humanized\maintenance\components\behaviors\RedirectionBehavior',
     ]
     ...
 ],
@@ -66,6 +66,8 @@ return [
 For full instructions on how to configure the behavior, check the [CONFIG](CONFIG.md)-file.
 
 ### Step 3 (Optional)
+
+#### Command Line Interface
 
 Add following lines to the console configuration file to enable the CLI:
 
@@ -80,7 +82,33 @@ Add following lines to the console configuration file to enable the CLI:
 Adding these lines allows access to the CLI provided by the module. 
 Here, the chosen module-name is maintenance, as such the various routes will be available at maintenance/controller-id/action-id, though any module-name can be chosen.
 
-For full instructions on how to use the fully-configured module, check the [USAGE](USAGE.md)-file.
+For full instructions on how to use the command-line interface portion of this module, check the [CLI](CLI.md)-file.
+
+#### Graphical User Interface
+
+This package provides several components for building custom GUI solutions to handle maintenance mode.
+
+
+
+   
+
+
+
+Add following lines to the web-application configuration file to enable the sample :
+
+```php
+'modules' => [
+    'maintenance' => [
+        'class' => 'humanized\maintenance\Module',
+    ],
+],
+```
+
+Adding these lines allows access to the CLI provided by the module. 
+Here, the chosen module-name is maintenance, as such the various routes will be available at maintenance/controller-id/action-id, though any module-name can be chosen.
+
+For full instructions on how to use the command-line interface portion of this module, check the [CLI](CLI.md)-file.
+
 
 ## Important Note
 
