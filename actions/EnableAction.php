@@ -25,13 +25,19 @@ use humanized\maintenance\models\Maintenance;
 
 class EnableAction extends Action
 {
+
     public function run()
     {
+        $cli = Yii::$app instanceof \yii\console\Application;
+
+        if (!$cli && !Yii::$app->request->isPost) { /* the request method is POST */
+            throw \yii\web\MethodNotAllowedHttpException('Method Not Allowed. This url can only handle POST request method');
+        }
         Maintenance::isDisabled() ?
                         Maintenance::enable() :
                         null;
 
-        if (Yii::$app instanceof \yii\console\Application) {
+        if ($cli) {
             return 0;
         }
         return $this->controller->goBack((!empty(Yii::$app->request->referrer) ? Yii::$app->request->referrer : null));

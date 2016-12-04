@@ -20,9 +20,14 @@ class ToggleLink extends Widget
         parent::init();
 
         $this->isEnabled = Maintenance::isEnabled();
+
         if (!isset($this->label)) {
             $prefix = $this->isEnabled ? 'Disable' : 'Enable';
             $this->label = $prefix . ' ' . 'Maintenance Mode';
+        }
+
+        if (!isset($this->options['data-method'])) {
+            $this->options['data-method'] = 'post';
         }
     }
 
