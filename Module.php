@@ -39,9 +39,11 @@ class Module extends \yii\base\Module
 
     public function beforeAction($action)
     {
-        $permission = isset($this->togglePermission) ? $this->togglePermission : null;
-        if (isset($permission) && !Yii::$app->user->can($permission)) {
-            return false;
+        if (!\Yii::$app instanceof \yii\console\Application) {
+            $permission = isset($this->togglePermission) ? $this->togglePermission : null;
+            if (isset($permission) && !Yii::$app->user->can($permission)) {
+                return false;
+            }
         }
         return parent::beforeAction($action);
     }
