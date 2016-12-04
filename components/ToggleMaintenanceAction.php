@@ -10,6 +10,10 @@ namespace humanized\maintenance\components;
 
 /**
  * 
+ * Maintenance Mode Controller Toggle Action
+ * 
+ * External action to be attached to  
+ * 
  * 
  * @name Yii2 Maintenance Module
  * @version 1.0
@@ -29,6 +33,10 @@ class ToggleMaintenanceAction extends Action
         Maintenance::isEnabled() ?
                         Maintenance::disable() :
                         Maintenance::enable();
+
+        if (Yii::$app instanceof \yii\console\Application) {
+            return 0;
+        }
         return $this->controller->goBack((!empty(Yii::$app->request->referrer) ? Yii::$app->request->referrer : null));
     }
 
