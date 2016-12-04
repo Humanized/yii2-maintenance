@@ -27,13 +27,4 @@ class ToggleController extends Controller
         ];
     }
 
-    public function beforeAction($action)
-    {
-        $permission = isset($this->module->params['togglePermission']) ? $this->module->params['togglePermission'] : null;
-        if (isset($permission) && !Yii::$app->user->can($permission)) {
-            return false;
-        }
-        return parent::beforeAction($action);
-    }
-
 }

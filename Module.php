@@ -24,12 +24,26 @@ namespace humanized\maintenance;
 class Module extends \yii\base\Module
 {
 
+    public $togglePermission = null;
+
     public function init()
     {
         if (\Yii::$app instanceof \yii\console\Application) {
             $this->controllerNamespace = 'humanized\maintenance\commands';
         }
+        if (!\Yii::$app instanceof \yii\console\Application) {
+            $this->params['togglePermission'] = $this->togglePermission;
+        }
         parent::init();
+    }
+
+    public function beforeAction($action)
+    {
+        $permission = isset($this->togglePermission) ? $this->togglePermission : null;
+        if (isset($permission) && !Yii::$app->user->can($permission)) {
+            return false;
+        }
+        return parent::beforeAction($action);
     }
 
 }
