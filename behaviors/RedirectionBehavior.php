@@ -6,7 +6,7 @@
  * @license https://github.com/humanized/yii2-maintenance/LICENSE.md
  */
 
-namespace humanized\maintenance\components\behaviors;
+namespace humanized\maintenance\behaviors;
 
 use humanized\maintenance\models\Maintenance;
 use Yii;

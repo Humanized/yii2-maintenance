@@ -63,6 +63,10 @@ class DefaultController extends \yii\console\Controller
         return ['a' => 'alias', 'p' => 'path'];
     }
 
+    /**
+     * 
+     * @inheritdoc
+     */
     public function actions()
     {
         return [

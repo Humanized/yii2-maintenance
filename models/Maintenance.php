@@ -2,7 +2,7 @@
 
 /**
  * @link https://github.com/humanized/yii2-maintenance
- * @copyright Copyright (c) 2016 Humanized BV Comm V
+ * @copyright Copyright (c) 2016 Humanized
  * @license https://github.com/humanized/yii2-maintenance/LICENSE.md
  */
 

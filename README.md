@@ -86,15 +86,13 @@ For full instructions on how to use the command-line interface portion of this m
 
 #### Graphical User Interface
 
-This package provides several components for building custom GUI solutions to handle maintenance mode.
+This package provides several components for building custom GUI solutions:
+
+First, the various controller actions for toggling maintenance mode are available in humanized\maintenance\actions.  
+These external actions can then be attached to the 
 
 
-
-   
-
-
-
-Add following lines to the web-application configuration file to enable the sample :
+Add following lines to the web-application configuration file to enable the sample controller :
 
 ```php
 'modules' => [

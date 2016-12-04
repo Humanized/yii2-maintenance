@@ -6,33 +6,30 @@
  * @license https://github.com/humanized/yii2-maintenance/LICENSE.md
  */
 
-namespace humanized\maintenance\components;
+namespace humanized\maintenance\actions;
 
 /**
  * 
- * Maintenance Mode Controller Toggle Action
- * 
- * External action to be attached to  
+ * Maintenance Mode External Controller Disable Action
  * 
  * 
- * @name Yii2 Maintenance Module
+ * @name Yii2 Maintenance Mode Contoller Disable  Action
  * @version 1.0
  * @author Jeffrey Geyssens <jeffrey@humanized.be>
  * @package yii2-maintenance
  * 
  */
 use Yii;
-use yii\base\Action;
 use humanized\maintenance\models\Maintenance;
 
-class ToggleMaintenanceAction extends Action
+class DisableAction extends yii\base\Action
 {
 
     public function run()
     {
         Maintenance::isEnabled() ?
                         Maintenance::disable() :
-                        Maintenance::enable();
+                        null;
 
         if (Yii::$app instanceof \yii\console\Application) {
             return 0;
