@@ -21,6 +21,8 @@ namespace humanized\maintenance;
  * @package yii2-maintenance
  * 
  */
+use Yii;
+
 class Module extends \yii\base\Module
 {
 
@@ -28,10 +30,10 @@ class Module extends \yii\base\Module
 
     public function init()
     {
-        if (\Yii::$app instanceof \yii\console\Application) {
+        if (Yii::$app instanceof \yii\console\Application) {
             $this->controllerNamespace = 'humanized\maintenance\commands';
         }
-        if (!\Yii::$app instanceof \yii\console\Application) {
+        if (!Yii::$app instanceof \yii\console\Application) {
             $this->params['togglePermission'] = $this->togglePermission;
         }
         parent::init();
