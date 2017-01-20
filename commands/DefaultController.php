@@ -49,7 +49,7 @@ class DefaultController extends \yii\console\Controller
      * 
      * @inheritdoc
      */
-    public function options()
+    public function options($actions)
     {
         return ['alias', 'path'];
     }
@@ -63,16 +63,6 @@ class DefaultController extends \yii\console\Controller
         return ['a' => 'alias', 'p' => 'path'];
     }
 
-    /**
-     * 
-     * @inheritdoc
-     */
-    public function actions()
-    {
-        return [
-            'toggle' => 'humanized\maintenance\components\ToggleMaintenanceAction',
-        ];
-    }
 
     /**
      * 
